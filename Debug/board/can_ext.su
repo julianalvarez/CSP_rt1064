@@ -1,0 +1,2 @@
+../board/can_ext.c:13:9:init_can	24	static
+../board/can_ext.c:35:9:send_can_msg	32	static

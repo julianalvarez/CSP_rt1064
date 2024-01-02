@@ -1,0 +1,6 @@
+C:\Users\PLANTIUM\Documents\MCUXpressoIDE_11.8.0_1165\workspace\CSP_rt1064\drivers/fsl_flexcan.h:1524:24:FLEXCAN_GetMbStatusFlags	64	static
+C:\Users\PLANTIUM\Documents\MCUXpressoIDE_11.8.0_1165\workspace\CSP_rt1064\drivers/fsl_flexcan.h:1569:20:FLEXCAN_ClearMbStatusFlags	24	static
+../board/can.c:21:6:CAN_wrMsg	32	static
+../board/can.c:48:6:CAN_rdMsg	16	static
+../board/can.c:69:6:CAN_ProcessIRQ	8	static
+../board/can.c:84:6:CAN2_IRQHandler	8	static
