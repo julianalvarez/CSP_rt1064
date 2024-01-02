@@ -4,6 +4,7 @@
 
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
+../board/adc.c \
 ../board/board.c \
 ../board/can.c \
 ../board/can_ext.c \
@@ -14,6 +15,7 @@ C_SRCS += \
 ../board/time.c 
 
 C_DEPS += \
+./board/adc.d \
 ./board/board.d \
 ./board/can.d \
 ./board/can_ext.d \
@@ -24,6 +26,7 @@ C_DEPS += \
 ./board/time.d 
 
 OBJS += \
+./board/adc.o \
 ./board/board.o \
 ./board/can.o \
 ./board/can_ext.o \
@@ -46,7 +49,7 @@ board/%.o: ../board/%.c board/subdir.mk
 clean: clean-board
 
 clean-board:
-	-$(RM) ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/time.d ./board/time.o
+	-$(RM) ./board/adc.d ./board/adc.o ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/time.d ./board/time.o
 
 .PHONY: clean-board
 

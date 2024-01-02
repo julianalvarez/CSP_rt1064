@@ -1,0 +1,4 @@
+C:\Users\PLANTIUM\Documents\MCUXpressoIDE_11.8.0_1165\workspace\CSP_rt1064\drivers/fsl_adc.h:275:24:ADC_GetChannelConversionValue	16	static
+../board/adc.c:10:6:Init_ADC	16	static
+../board/adc.c:32:6:ADC_Start	16	static
+../board/adc.c:42:8:ADC_Get	24	static
