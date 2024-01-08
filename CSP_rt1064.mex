@@ -1182,12 +1182,12 @@
                                  <setting name="reloadSelect" value="kPWM_LocalReload"/>
                                  <setting name="reloadFrequency" value="kPWM_LoadEveryOportunity"/>
                                  <setting name="forceTrigger" value="kPWM_Force_Local"/>
-                                 <setting name="enableDebugMode" value="true"/>
+                                 <setting name="enableDebugMode" value="false"/>
                                  <set name="outputTrigger_sel">
                                     <selected/>
                                  </set>
                                  <setting name="loadOK" value="false"/>
-                                 <setting name="startCounter" value="true"/>
+                                 <setting name="startCounter" value="false"/>
                                  <set name="interrupt_sel">
                                     <selected/>
                                  </set>
@@ -1206,7 +1206,7 @@
                                     <setting name="channel_id" value="A"/>
                                     <setting name="functionSel" value="pwmOutput"/>
                                     <struct name="pwm">
-                                       <setting name="dutyCyclePercent" value="50"/>
+                                       <setting name="dutyCyclePercent" value="0"/>
                                        <setting name="level" value="kPWM_HighTrue"/>
                                        <struct name="fault_channel0">
                                           <set name="dismap">

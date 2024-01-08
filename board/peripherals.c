@@ -464,10 +464,10 @@ instance:
           - reloadSelect: 'kPWM_LocalReload'
           - reloadFrequency: 'kPWM_LoadEveryOportunity'
           - forceTrigger: 'kPWM_Force_Local'
-          - enableDebugMode: 'true'
+          - enableDebugMode: 'false'
           - outputTrigger_sel: ''
           - loadOK: 'false'
-          - startCounter: 'true'
+          - startCounter: 'false'
           - interrupt_sel: ''
           - dma_used: 'false'
           - dma:
@@ -480,7 +480,7 @@ instance:
             - channel_id: 'A'
             - functionSel: 'pwmOutput'
             - pwm:
-              - dutyCyclePercent: '50'
+              - dutyCyclePercent: '0'
               - level: 'kPWM_HighTrue'
               - fault_channel0:
                 - dismap: ''
@@ -558,13 +558,13 @@ pwm_config_t BOARD_PWM1_SM0_config = {
   .reloadSelect = kPWM_LocalReload,
   .reloadFrequency = kPWM_LoadEveryOportunity,
   .forceTrigger = kPWM_Force_Local,
-  .enableDebugMode = true,
+  .enableDebugMode = false,
 };
 
 pwm_signal_param_t BOARD_PWM1_SM0_pwm_function_config[1]= {
   {
     .pwmChannel = kPWM_PwmA,
-    .dutyCyclePercent = 50U,
+    .dutyCyclePercent = 0U,
     .level = kPWM_HighTrue,
     .faultState = kPWM_PwmFaultState1,
     .pwmchannelenable = true,
@@ -619,8 +619,6 @@ static void BOARD_PWM1_init(void) {
   PWM_SetupForceSignal(BOARD_PWM1_PERIPHERAL, BOARD_PWM1_SM0, BOARD_PWM1_SM0_A, kPWM_UsePwm);
   /* Setup PWM output setting for submodule SM0 */
   PWM_SetupPwm(BOARD_PWM1_PERIPHERAL, BOARD_PWM1_SM0, BOARD_PWM1_SM0_pwm_function_config, 1U, kPWM_SignedCenterAligned, BOARD_PWM1_SM0_COUNTER_FREQ_HZ, BOARD_PWM1_SM0_SM_CLK_SOURCE_FREQ_HZ);
-  /* Start selected counters */
-  PWM_StartTimer(BOARD_PWM1_PERIPHERAL, (kPWM_Control_Module_0));
 }
 
 /***********************************************************************************************************************

@@ -25,7 +25,7 @@ void Init_PWM (void)
 
 void PWM_Start (uint32_t uPwmId)
 {
-	PWM_SetPwmLdok(BOARD_PWM1_PERIPHERAL, kPWM_Control_Module_0 , true);
+	PWM_StartTimer(BOARD_PWM1_PERIPHERAL, (uPwmId));
 }
 
 void PWM_Set (uint32_t uPwmId,
@@ -33,4 +33,5 @@ void PWM_Set (uint32_t uPwmId,
               uint32_t uCycle)
 {
     PWM_UpdatePwmDutycycle(BOARD_PWM1_PERIPHERAL, uPwmId, uOutput, kPWM_SignedCenterAligned, uCycle);
+    PWM_SetPwmLdok(BOARD_PWM1_PERIPHERAL, kPWM_Control_Module_0 , true);
 }

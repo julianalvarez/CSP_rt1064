@@ -16,7 +16,6 @@
 
 void                    Init_PWM  (void); //FLEXPWM1, SUBMOD 0, PWMA, 12kHZ, 50%
 void                    PWM_Start (uint32_t uPwmId);
-void                    PWM_Stop  (uint32_t uPwmId);
 void                    PWM_Set   (uint32_t uPwmId,
                                    uint32_t uOutput,
                                    uint32_t uCycle);
