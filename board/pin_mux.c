@@ -304,6 +304,30 @@ void BOARD_InitPins_ADC1_ch9(void) {
   IOMUXC_SetPinMux(IOMUXC_GPIO_AD_B1_04_GPIO1_IO20, 0U); 
 }
 
+
+/*
+ * TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+BOARD_InitPins_PWM:
+- options: {callFromInitBoot: 'false', coreID: core0, enableClock: 'false'}
+- pin_list:
+  - {pin_num: J4, peripheral: PWM1, signal: 'A, 0', pin_signal: GPIO_SD_B0_00, identifier: ''}
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS ***********
+ */
+
+/* FUNCTION ************************************************************************************************************
+ *
+ * Function Name : BOARD_InitPins_PWM
+ * Description   : Configures pin routing and optionally pin electrical features.
+ *
+ * END ****************************************************************************************************************/
+void BOARD_InitPins_PWM(void) {
+
+	  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_FLEXPWM1_PWMA00, 0U);
+
+
+	  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_00_FLEXPWM1_PWMA00, 0x10B0U);
+}
+
 /***********************************************************************************************************************
  * EOF
  **********************************************************************************************************************/

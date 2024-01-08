@@ -93,6 +93,12 @@ void BOARD_InitPins_ADC1_ch0(void);
  */
 void BOARD_InitPins_ADC1_ch9(void);
 
+/*!
+ * @brief Configures pin routing and optionally pin electrical features.
+ *
+ */
+void BOARD_InitPins_PWM(void);
+
 #if defined(__cplusplus)
 }
 #endif

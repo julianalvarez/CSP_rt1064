@@ -14,6 +14,7 @@
 #include "fsl_clock.h"
 #include "fsl_flexcan.h"
 #include "fsl_adc.h"
+#include "fsl_pwm.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -49,6 +50,32 @@ extern "C" {
 /* Channel 1 (IN.9) conversion control group. */
 #define BOARD_ADC1_CH1_CONTROL_GROUP 0U
 
+/* Definitions for BOARD_InitPWM functional group */
+/* Definition of peripheral ID */
+#define BOARD_PWM1_PERIPHERAL PWM1
+/* Definition of submodule 0 ID */
+#define BOARD_PWM1_SM0 kPWM_Module_0
+/* Definition of clock source of submodule 0 frequency in Hertz */
+#define BOARD_PWM1_SM0_SM_CLK_SOURCE_FREQ_HZ 150000000U
+/* Definition of submodule 0 counter clock source frequency in Hertz - BOARD_PWM1_SM0_SM_CLK_SOURCE_FREQ_HZ divided by prescaler */
+#define BOARD_PWM1_SM0_COUNTER_CLK_SOURCE_FREQ_HZ 150000000U
+/* Definition of submodule 0 counter (PWM) frequency in Hertz */
+#define BOARD_PWM1_SM0_COUNTER_FREQ_HZ 12000U
+/* Definition of submodule 0 channel A ID */
+#define BOARD_PWM1_SM0_A kPWM_PwmA
+/* Definition of submodule 0 channel B ID */
+#define BOARD_PWM1_SM0_B kPWM_PwmB
+/* Definition of submodule 0 channel X ID */
+#define BOARD_PWM1_SM0_X kPWM_PwmX
+/* Definition of fault Fault0 ID */
+#define BOARD_PWM1_F0_FAULT0 kPWM_Fault_0
+/* Definition of fault Fault1 ID */
+#define BOARD_PWM1_F0_FAULT1 kPWM_Fault_1
+/* Definition of fault Fault2 ID */
+#define BOARD_PWM1_F0_FAULT2 kPWM_Fault_2
+/* Definition of fault Fault3 ID */
+#define BOARD_PWM1_F0_FAULT3 kPWM_Fault_3
+
 /***********************************************************************************************************************
  * Global variables
  **********************************************************************************************************************/
@@ -58,6 +85,14 @@ extern const flexcan_config_t BOARD_CAN2_config;
 extern const flexcan_rx_mb_config_t BOARD_CAN2_rx_mb_config_1;
 extern const adc_config_t BOARD_ADC1_config;
 extern const adc_channel_config_t BOARD_ADC1_channels_config[2];
+extern pwm_config_t BOARD_PWM1_SM0_config;
+
+extern pwm_signal_param_t BOARD_PWM1_SM0_pwm_function_config[1];
+extern const pwm_fault_input_filter_param_t BOARD_PWM1_faultInputFilter_config;
+extern const pwm_fault_param_t BOARD_PWM1_Fault0_fault_config;
+extern const pwm_fault_param_t BOARD_PWM1_Fault1_fault_config;
+extern const pwm_fault_param_t BOARD_PWM1_Fault2_fault_config;
+extern const pwm_fault_param_t BOARD_PWM1_Fault3_fault_config;
 
 /***********************************************************************************************************************
  * Initialization functions
@@ -68,6 +103,8 @@ void BOARD_InitUART(void);
 void BOARD_InitCAN2(void);
 
 void BOARD_InitADC1(void);
+
+void BOARD_InitPWM(void);
 
 /***********************************************************************************************************************
  * BOARD_InitBootPeripherals function

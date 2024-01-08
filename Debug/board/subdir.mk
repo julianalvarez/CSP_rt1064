@@ -12,6 +12,7 @@ C_SRCS += \
 ../board/dcd.c \
 ../board/peripherals.c \
 ../board/pin_mux.c \
+../board/pwm.c \
 ../board/time.c 
 
 C_DEPS += \
@@ -23,6 +24,7 @@ C_DEPS += \
 ./board/dcd.d \
 ./board/peripherals.d \
 ./board/pin_mux.d \
+./board/pwm.d \
 ./board/time.d 
 
 OBJS += \
@@ -34,6 +36,7 @@ OBJS += \
 ./board/dcd.o \
 ./board/peripherals.o \
 ./board/pin_mux.o \
+./board/pwm.o \
 ./board/time.o 
 
 
@@ -49,7 +52,7 @@ board/%.o: ../board/%.c board/subdir.mk
 clean: clean-board
 
 clean-board:
-	-$(RM) ./board/adc.d ./board/adc.o ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/time.d ./board/time.o
+	-$(RM) ./board/adc.d ./board/adc.o ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/pwm.d ./board/pwm.o ./board/time.d ./board/time.o
 
 .PHONY: clean-board
 

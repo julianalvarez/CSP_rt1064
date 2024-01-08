@@ -14,7 +14,9 @@ C_SRCS += \
 ../drivers/fsl_flexcan_edma.c \
 ../drivers/fsl_gpio.c \
 ../drivers/fsl_gpt.c \
-../drivers/fsl_lpuart.c 
+../drivers/fsl_lpuart.c \
+../drivers/fsl_pwm.c \
+../drivers/fsl_xbara.c 
 
 C_DEPS += \
 ./drivers/fsl_adc.d \
@@ -27,7 +29,9 @@ C_DEPS += \
 ./drivers/fsl_flexcan_edma.d \
 ./drivers/fsl_gpio.d \
 ./drivers/fsl_gpt.d \
-./drivers/fsl_lpuart.d 
+./drivers/fsl_lpuart.d \
+./drivers/fsl_pwm.d \
+./drivers/fsl_xbara.d 
 
 OBJS += \
 ./drivers/fsl_adc.o \
@@ -40,7 +44,9 @@ OBJS += \
 ./drivers/fsl_flexcan_edma.o \
 ./drivers/fsl_gpio.o \
 ./drivers/fsl_gpt.o \
-./drivers/fsl_lpuart.o 
+./drivers/fsl_lpuart.o \
+./drivers/fsl_pwm.o \
+./drivers/fsl_xbara.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -55,7 +61,7 @@ drivers/%.o: ../drivers/%.c drivers/subdir.mk
 clean: clean-drivers
 
 clean-drivers:
-	-$(RM) ./drivers/fsl_adc.d ./drivers/fsl_adc.o ./drivers/fsl_clock.d ./drivers/fsl_clock.o ./drivers/fsl_common.d ./drivers/fsl_common.o ./drivers/fsl_common_arm.d ./drivers/fsl_common_arm.o ./drivers/fsl_dmamux.d ./drivers/fsl_dmamux.o ./drivers/fsl_edma.d ./drivers/fsl_edma.o ./drivers/fsl_flexcan.d ./drivers/fsl_flexcan.o ./drivers/fsl_flexcan_edma.d ./drivers/fsl_flexcan_edma.o ./drivers/fsl_gpio.d ./drivers/fsl_gpio.o ./drivers/fsl_gpt.d ./drivers/fsl_gpt.o ./drivers/fsl_lpuart.d ./drivers/fsl_lpuart.o
+	-$(RM) ./drivers/fsl_adc.d ./drivers/fsl_adc.o ./drivers/fsl_clock.d ./drivers/fsl_clock.o ./drivers/fsl_common.d ./drivers/fsl_common.o ./drivers/fsl_common_arm.d ./drivers/fsl_common_arm.o ./drivers/fsl_dmamux.d ./drivers/fsl_dmamux.o ./drivers/fsl_edma.d ./drivers/fsl_edma.o ./drivers/fsl_flexcan.d ./drivers/fsl_flexcan.o ./drivers/fsl_flexcan_edma.d ./drivers/fsl_flexcan_edma.o ./drivers/fsl_gpio.d ./drivers/fsl_gpio.o ./drivers/fsl_gpt.d ./drivers/fsl_gpt.o ./drivers/fsl_lpuart.d ./drivers/fsl_lpuart.o ./drivers/fsl_pwm.d ./drivers/fsl_pwm.o ./drivers/fsl_xbara.d ./drivers/fsl_xbara.o
 
 .PHONY: clean-drivers
 

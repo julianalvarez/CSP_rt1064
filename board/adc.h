@@ -6,16 +6,16 @@
  */
 
 /* Include ********************************************************************/
-#include <stdint.h>
-#include "peripherals.h"
-#include "board.h"
-#include "pin_mux.h"
+
 
 #ifndef ADC_H_
 #define ADC_H_
 
 /* Typedefs *******************************************************************/
-
+#include <stdint.h>
+#include "peripherals.h"
+#include "board.h"
+#include "pin_mux.h"
 #include <adc.h>
 
 void Init_ADC  (uint32_t ctrl, uint32_t Channel);
