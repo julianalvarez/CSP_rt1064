@@ -1186,7 +1186,7 @@
                                  <set name="outputTrigger_sel">
                                     <selected/>
                                  </set>
-                                 <setting name="loadOK" value="true"/>
+                                 <setting name="loadOK" value="false"/>
                                  <setting name="startCounter" value="true"/>
                                  <set name="interrupt_sel">
                                     <selected/>

@@ -14,15 +14,12 @@
 #include "pin_mux.h"
 #include <pwm.h>
 
-void                    PWM_Init  (uint32_t uPwmId,		/* 0,1,2,3 */
-                                   uint32_t uOutput,	/* 0,1,2,3,4,5 */
-                                   uint32_t uFreq,      /* 500 - 20000 Hz */
-                                   uint32_t uCycle);	/* 0 to 10000 */
+void                    Init_PWM  (void); //FLEXPWM1, SUBMOD 0, PWMA, 12kHZ, 50%
 void                    PWM_Start (uint32_t uPwmId);
 void                    PWM_Stop  (uint32_t uPwmId);
-void                    PWM_Set   (uint32_t uPwmId,		/* 0,1,2,3 */
-                                   uint32_t uOutput,	/* 0,1,2,3,4,5 */
-                                   uint32_t uCycle);	/* 0 to 10000 */
+void                    PWM_Set   (uint32_t uPwmId,
+                                   uint32_t uOutput,
+                                   uint32_t uCycle);
 uint32_t                PWM_GetFreq (void);
 
 #endif /* PWM_H_ */

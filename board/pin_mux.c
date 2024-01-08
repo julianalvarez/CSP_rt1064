@@ -321,11 +321,7 @@ BOARD_InitPins_PWM:
  *
  * END ****************************************************************************************************************/
 void BOARD_InitPins_PWM(void) {
-
-	  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_FLEXPWM1_PWMA00, 0U);
-
-
-	  IOMUXC_SetPinConfig(IOMUXC_GPIO_SD_B0_00_FLEXPWM1_PWMA00, 0x10B0U);
+  IOMUXC_SetPinMux(IOMUXC_GPIO_SD_B0_00_FLEXPWM1_PWMA00, 0U); 
 }
 
 /***********************************************************************************************************************
