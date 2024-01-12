@@ -13,7 +13,8 @@ C_SRCS += \
 ../board/peripherals.c \
 ../board/pin_mux.c \
 ../board/pwm.c \
-../board/time.c 
+../board/time.c \
+../board/uart.c 
 
 C_DEPS += \
 ./board/adc.d \
@@ -25,7 +26,8 @@ C_DEPS += \
 ./board/peripherals.d \
 ./board/pin_mux.d \
 ./board/pwm.d \
-./board/time.d 
+./board/time.d \
+./board/uart.d 
 
 OBJS += \
 ./board/adc.o \
@@ -37,7 +39,8 @@ OBJS += \
 ./board/peripherals.o \
 ./board/pin_mux.o \
 ./board/pwm.o \
-./board/time.o 
+./board/time.o \
+./board/uart.o 
 
 
 # Each subdirectory must supply rules for building sources it contributes
@@ -52,7 +55,7 @@ board/%.o: ../board/%.c board/subdir.mk
 clean: clean-board
 
 clean-board:
-	-$(RM) ./board/adc.d ./board/adc.o ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/pwm.d ./board/pwm.o ./board/time.d ./board/time.o
+	-$(RM) ./board/adc.d ./board/adc.o ./board/board.d ./board/board.o ./board/can.d ./board/can.o ./board/can_ext.d ./board/can_ext.o ./board/clock_config.d ./board/clock_config.o ./board/dcd.d ./board/dcd.o ./board/peripherals.d ./board/peripherals.o ./board/pin_mux.d ./board/pin_mux.o ./board/pwm.d ./board/pwm.o ./board/time.d ./board/time.o ./board/uart.d ./board/uart.o
 
 .PHONY: clean-board
 

@@ -14,6 +14,7 @@
 #include "clock_config.h"
 #include "MIMXRT1064.h"
 
+#include "uart.h"
 #include "time.h"
 #include "adc.h"
 #include "can.h"
