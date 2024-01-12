@@ -12,7 +12,6 @@
 #include "peripherals.h"
 #include "board.h"
 #include "pin_mux.h"
-#include <pwm.h>
 
 void                    Init_PWM  (void); //FLEXPWM1, SUBMOD 0, PWMA, 12kHZ, 50%
 void                    PWM_Start (uint32_t uPwmId);

@@ -16,7 +16,6 @@
 #include "peripherals.h"
 #include "board.h"
 #include "pin_mux.h"
-#include <adc.h>
 
 void Init_ADC  (uint32_t ctrl, uint32_t Channel);
 

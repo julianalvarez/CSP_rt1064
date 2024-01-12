@@ -5,17 +5,14 @@
 # Add inputs and outputs from these tool invocations to the build variables 
 C_SRCS += \
 ../utilities/fsl_assert.c \
-../utilities/fsl_debug_console.c \
 ../utilities/fsl_str.c 
 
 C_DEPS += \
 ./utilities/fsl_assert.d \
-./utilities/fsl_debug_console.d \
 ./utilities/fsl_str.d 
 
 OBJS += \
 ./utilities/fsl_assert.o \
-./utilities/fsl_debug_console.o \
 ./utilities/fsl_str.o 
 
 
@@ -31,7 +28,7 @@ utilities/%.o: ../utilities/%.c utilities/subdir.mk
 clean: clean-utilities
 
 clean-utilities:
-	-$(RM) ./utilities/fsl_assert.d ./utilities/fsl_assert.o ./utilities/fsl_debug_console.d ./utilities/fsl_debug_console.o ./utilities/fsl_str.d ./utilities/fsl_str.o
+	-$(RM) ./utilities/fsl_assert.d ./utilities/fsl_assert.o ./utilities/fsl_str.d ./utilities/fsl_str.o
 
 .PHONY: clean-utilities
 
