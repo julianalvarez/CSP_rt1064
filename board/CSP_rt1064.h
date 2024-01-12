@@ -11,9 +11,9 @@
 #include "pin_mux.h"
 #include "fsl_debug_console.h"
 
-#include "clock_config.h"
 #include "MIMXRT1064.h"
 
+#include "clock.h"
 #include "uart.h"
 #include "time.h"
 #include "adc.h"
