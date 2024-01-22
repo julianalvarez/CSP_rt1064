@@ -29,6 +29,10 @@ functionalGroups:
   UUID: ca4fd173-1d87-44cf-b179-7a2f004fca16
   id_prefix: BOARD_
   selectedCore: core0
+- name: BOARAD_InitSPI2
+  UUID: 3e2b5b66-eac8-47a6-8b46-0ed1f12c6570
+  id_prefix: BOARD_
+  selectedCore: core0
  * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
 
 /* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
@@ -622,6 +626,239 @@ static void BOARD_PWM1_init(void) {
 }
 
 /***********************************************************************************************************************
+ * BOARAD_InitSPI2 functional group
+ **********************************************************************************************************************/
+/***********************************************************************************************************************
+ * FLEXSPI2 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'FLEXSPI2'
+- type: 'flexspi'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'flexspi_380e74d39208b17ae8a8dd5f2724ca53'
+- functional_group: 'BOARAD_InitSPI2'
+- peripheral: 'FLEXSPI2'
+- config_sets:
+  - fsl_flexspi:
+    - flexspiConfig:
+      - rxSampleClock: 'kFLEXSPI_ReadSampleClkLoopbackInternally'
+      - clockSource: 'FlexSpiClock'
+      - clockSourceFreq: 'ClocksTool_DefaultInit'
+      - enableSckFreeRunning: 'false'
+      - enableCombination: 'false'
+      - enableDoze: 'true'
+      - enableHalfSpeedAccess: 'false'
+      - enableSckBDiffOpt: 'false'
+      - enableSameConfigForAll: 'false'
+      - seqTimeoutCycleString: '65535'
+      - ipGrantTimeoutCycleString: '255'
+      - txWatermark: '8'
+      - rxWatermark: '8'
+      - ahbConfig:
+        - enableAHBWriteIpTxFifo: 'false'
+        - enableAHBWriteIpRxFifo: 'false'
+        - ahbGrantTimeoutCycleString: '255'
+        - ahbBusTimeoutCycleString: '65535'
+        - resumeWaitCycleString: '32'
+        - buffer:
+          - 0:
+            - priority: '0'
+            - masterIndex: '0'
+            - bufferSize: '256'
+            - enablePrefetch: 'true'
+          - 1:
+            - priority: '1'
+            - masterIndex: '0'
+            - bufferSize: '256'
+            - enablePrefetch: 'true'
+          - 2:
+            - priority: '2'
+            - masterIndex: '0'
+            - bufferSize: '256'
+            - enablePrefetch: 'true'
+          - 3:
+            - priority: '3'
+            - masterIndex: '0'
+            - bufferSize: '256'
+            - enablePrefetch: 'true'
+        - enableClearAHBBufferOpt: 'false'
+        - enableReadAddressOpt: 'false'
+        - enableAHBPrefetch: 'false'
+        - enableAHBBufferable: 'false'
+        - enableAHBCachable: 'false'
+    - flexspiInterrupt:
+      - interrupt_sel: ''
+      - interrupt_vectors:
+        - enableInterrupt: 'false'
+        - interrupt:
+          - IRQn: 'FLEXSPI_IRQn'
+          - enable_interrrupt: 'enabled'
+          - enable_priority: 'false'
+          - priority: '0'
+          - enable_custom_name: 'false'
+    - enableCustomLUT: 'true'
+    - lutConfig:
+      - flash: 'defaultFlash'
+      - lutName: 'defaultLUT'
+    - devices_configs: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+const flexspi_config_t BOARD_FLEXSPI2_config = {
+  .rxSampleClock = kFLEXSPI_ReadSampleClkLoopbackInternally,
+  .enableSckFreeRunning = false,
+  .enableCombination = false,
+  .enableDoze = true,
+  .enableHalfSpeedAccess = false,
+  .enableSckBDiffOpt = false,
+  .enableSameConfigForAll = false,
+  .seqTimeoutCycle = 65535,
+  .ipGrantTimeoutCycle = 255,
+  .txWatermark = 8U,
+  .rxWatermark = 8U,
+  .ahbConfig = {
+    .enableAHBWriteIpTxFifo = false,
+    .enableAHBWriteIpRxFifo = false,
+    .ahbGrantTimeoutCycle = 255,
+    .ahbBusTimeoutCycle = 65535,
+    .resumeWaitCycle = 32,
+    .buffer = {
+      {
+        .priority = 0,
+        .masterIndex = 0U,
+        .bufferSize = 256U,
+        .enablePrefetch = true
+      },
+      {
+        .priority = 1,
+        .masterIndex = 0U,
+        .bufferSize = 256U,
+        .enablePrefetch = true
+      },
+      {
+        .priority = 2,
+        .masterIndex = 0U,
+        .bufferSize = 256U,
+        .enablePrefetch = true
+      },
+      {
+        .priority = 3,
+        .masterIndex = 0U,
+        .bufferSize = 256U,
+        .enablePrefetch = true
+      }
+    },
+    .enableClearAHBBufferOpt = false,
+    .enableReadAddressOpt = false,
+    .enableAHBPrefetch = false,
+    .enableAHBBufferable = false,
+    .enableAHBCachable = false
+  }
+};
+/* This is LUT for ISSI IS25WP064AJBLE QSPI Flash. */
+const uint32_t BOARD_FLEXSPI2_LUT[BOARD_FLEXSPI2_LUT_LENGTH] = {
+  /* Normal read mode -SDR */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_NORMAL] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x03, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_1PAD, 0x18),
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_NORMAL + 1] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_READ_SDR, kFLEXSPI_1PAD, 0x04, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Fast read mode - SDR */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_FAST] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x0B, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_1PAD, 0x18),
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_FAST + 1] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_DUMMY_SDR, kFLEXSPI_1PAD, 0x08, kFLEXSPI_Command_READ_SDR, kFLEXSPI_1PAD, 0x04),
+
+  /* Fast read quad mode - SDR */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_FAST_QUAD] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0xEB, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_4PAD, 0x18),
+  [4 * NOR_CMD_LUT_SEQ_IDX_READ_FAST_QUAD + 1] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_DUMMY_SDR, kFLEXSPI_4PAD, 0x06, kFLEXSPI_Command_READ_SDR, kFLEXSPI_4PAD, 0x04),
+
+  /* Read extend parameters */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READSTATUS] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x81, kFLEXSPI_Command_READ_SDR, kFLEXSPI_1PAD, 0x04),
+
+  /* Write Enable */
+  [4 * NOR_CMD_LUT_SEQ_IDX_WRITEENABLE] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x06, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Erase Sector */
+  [4 * NOR_CMD_LUT_SEQ_IDX_ERASESECTOR] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0xD7, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_1PAD, 0x18),
+
+  /* Page Program - single mode */
+  [4 * NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_SINGLE] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x02, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_1PAD, 0x18),
+  [4 * NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_SINGLE + 1] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_WRITE_SDR, kFLEXSPI_1PAD, 0x04, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Page Program - quad mode */
+  [4 * NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_QUAD] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x32, kFLEXSPI_Command_RADDR_SDR, kFLEXSPI_1PAD, 0x18),
+  [4 * NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_QUAD + 1] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_WRITE_SDR, kFLEXSPI_4PAD, 0x04, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Read ID */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READID] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x9F, kFLEXSPI_Command_READ_SDR, kFLEXSPI_1PAD, 0x04),
+
+  /* Enable Quad mode */
+  [4 * NOR_CMD_LUT_SEQ_IDX_WRITESTATUSREG] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x01, kFLEXSPI_Command_WRITE_SDR, kFLEXSPI_1PAD, 0x04),
+
+  /* Enter QPI mode */
+  [4 * NOR_CMD_LUT_SEQ_IDX_ENTERQPI] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x35, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Exit QPI mode */
+  [4 * NOR_CMD_LUT_SEQ_IDX_EXITQPI] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_4PAD, 0xF5, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+
+  /* Read status register */
+  [4 * NOR_CMD_LUT_SEQ_IDX_READSTATUSREG] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0x05, kFLEXSPI_Command_READ_SDR, kFLEXSPI_1PAD, 0x04),
+
+  /* Erase whole chip */
+  [4 * NOR_CMD_LUT_SEQ_IDX_ERASECHIP] =
+  FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0xC7, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
+  };
+static void BOARD_FLEXSPI2_init(void) {
+	 /* Update LUT table. */
+	 FLEXSPI_UpdateLUT(BOARD_FLEXSPI2_PERIPHERAL, 0, BOARD_FLEXSPI2_LUT, BOARD_FLEXSPI2_LUT_LENGTH);
+
+	 /* Do software reset. */
+	 FLEXSPI_SoftwareReset(BOARD_FLEXSPI2_PERIPHERAL);
+}
+
+/***********************************************************************************************************************
+ * NVIC_5 initialization code
+ **********************************************************************************************************************/
+/* clang-format off */
+/* TEXT BELOW IS USED AS SETTING FOR TOOLS *************************************
+instance:
+- name: 'NVIC_5'
+- type: 'nvic'
+- mode: 'general'
+- custom_name_enabled: 'false'
+- type_id: 'nvic_57b5eef3774cc60acaede6f5b8bddc67'
+- functional_group: 'BOARAD_InitSPI2'
+- peripheral: 'NVIC'
+- config_sets:
+  - nvic:
+    - interrupt_table:
+      - 0: []
+    - interrupts: []
+ * BE CAREFUL MODIFYING THIS COMMENT - IT IS YAML SETTINGS FOR TOOLS **********/
+/* clang-format on */
+
+/* Empty initialization function (commented out)
+static void BOARD_NVIC_5_init(void) {
+} */
+
+/***********************************************************************************************************************
  * Initialization functions
  **********************************************************************************************************************/
 void BOARD_InitUART(void)
@@ -646,6 +883,12 @@ void BOARD_InitPWM(void)
 {
   /* Initialize components */
   BOARD_PWM1_init();
+}
+
+void BOARAD_InitSPI2(void)
+{
+  /* Initialize components */
+  BOARD_FLEXSPI2_init();
 }
 
 /***********************************************************************************************************************

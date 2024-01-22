@@ -19,5 +19,6 @@
 #include "adc.h"
 #include "can.h"
 #include "pwm.h"
+#include "spi_flash.h"
 
 #endif /* CSP_RT1064_H_ */

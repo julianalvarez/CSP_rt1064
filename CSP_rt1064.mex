@@ -853,6 +853,16 @@
                   <data type="Version">2.6.0</data>
                </feature>
             </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexspi" description="FLEXSPI Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
+               <feature name="enabled" evaluation="equal">
+                  <data type="Boolean">true</data>
+               </feature>
+            </dependency>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexspi" description="An unsupported version of the FLEXSPI Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="equivalent">
+                  <data type="Version">2.5.0</data>
+               </feature>
+            </dependency>
             <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data>true</data>
@@ -1294,6 +1304,110 @@
                            <setting name="priority" value="0"/>
                            <setting name="enable_custom_name" value="false"/>
                         </struct>
+                     </config_set>
+                  </instance>
+               </instances>
+            </functional_group>
+            <functional_group name="BOARAD_InitSPI2" uuid="3e2b5b66-eac8-47a6-8b46-0ed1f12c6570" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+               <description></description>
+               <options/>
+               <dependencies>
+                  <dependency resourceType="ClockOutput" resourceId="FLEXSPI2_CLK_ROOT" description="FLEXSPI2_CLK_ROOT is inactive." problem_level="2" source="Peripherals:BOARAD_InitSPI2">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+                  <dependency resourceType="ClockOutput" resourceId="AHB_CLK_ROOT" description="AHB_CLK_ROOT is inactive." problem_level="1" source="Peripherals:BOARAD_InitSPI2">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <instances>
+                  <instance name="FLEXSPI2" uuid="754b67d7-14c2-4ba6-beb3-e3d1f68d857f" type="flexspi" type_id="flexspi_380e74d39208b17ae8a8dd5f2724ca53" mode="general" peripheral="FLEXSPI2" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_flexspi">
+                        <struct name="flexspiConfig">
+                           <setting name="rxSampleClock" value="kFLEXSPI_ReadSampleClkLoopbackInternally"/>
+                           <setting name="clockSource" value="FlexSpiClock"/>
+                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                           <setting name="enableSckFreeRunning" value="false"/>
+                           <setting name="enableCombination" value="false"/>
+                           <setting name="enableDoze" value="true"/>
+                           <setting name="enableHalfSpeedAccess" value="false"/>
+                           <setting name="enableSckBDiffOpt" value="false"/>
+                           <setting name="enableSameConfigForAll" value="false"/>
+                           <setting name="seqTimeoutCycleString" value="65535"/>
+                           <setting name="ipGrantTimeoutCycleString" value="255"/>
+                           <setting name="txWatermark" value="8"/>
+                           <setting name="rxWatermark" value="8"/>
+                           <struct name="ahbConfig">
+                              <setting name="enableAHBWriteIpTxFifo" value="false"/>
+                              <setting name="enableAHBWriteIpRxFifo" value="false"/>
+                              <setting name="ahbGrantTimeoutCycleString" value="255"/>
+                              <setting name="ahbBusTimeoutCycleString" value="65535"/>
+                              <setting name="resumeWaitCycleString" value="32"/>
+                              <array name="buffer">
+                                 <struct name="0">
+                                    <setting name="priority" value="0"/>
+                                    <setting name="masterIndex" value="0"/>
+                                    <setting name="bufferSize" value="256"/>
+                                    <setting name="enablePrefetch" value="true"/>
+                                 </struct>
+                                 <struct name="1">
+                                    <setting name="priority" value="1"/>
+                                    <setting name="masterIndex" value="0"/>
+                                    <setting name="bufferSize" value="256"/>
+                                    <setting name="enablePrefetch" value="true"/>
+                                 </struct>
+                                 <struct name="2">
+                                    <setting name="priority" value="2"/>
+                                    <setting name="masterIndex" value="0"/>
+                                    <setting name="bufferSize" value="256"/>
+                                    <setting name="enablePrefetch" value="true"/>
+                                 </struct>
+                                 <struct name="3">
+                                    <setting name="priority" value="3"/>
+                                    <setting name="masterIndex" value="0"/>
+                                    <setting name="bufferSize" value="256"/>
+                                    <setting name="enablePrefetch" value="true"/>
+                                 </struct>
+                              </array>
+                              <setting name="enableClearAHBBufferOpt" value="false"/>
+                              <setting name="enableReadAddressOpt" value="false"/>
+                              <setting name="enableAHBPrefetch" value="false"/>
+                              <setting name="enableAHBBufferable" value="false"/>
+                              <setting name="enableAHBCachable" value="false"/>
+                           </struct>
+                        </struct>
+                        <struct name="flexspiInterrupt">
+                           <set name="interrupt_sel">
+                              <selected/>
+                           </set>
+                           <struct name="interrupt_vectors">
+                              <setting name="enableInterrupt" value="false"/>
+                              <struct name="interrupt">
+                                 <setting name="IRQn" value="FLEXSPI_IRQn"/>
+                                 <setting name="enable_interrrupt" value="enabled"/>
+                                 <setting name="enable_priority" value="false"/>
+                                 <setting name="priority" value="0"/>
+                                 <setting name="enable_custom_name" value="false"/>
+                              </struct>
+                           </struct>
+                        </struct>
+                        <setting name="enableCustomLUT" value="true"/>
+                        <struct name="lutConfig">
+                           <setting name="flash" value="defaultFlash"/>
+                           <setting name="lutName" value="defaultLUT"/>
+                        </struct>
+                        <array name="devices_configs"/>
+                     </config_set>
+                  </instance>
+                  <instance name="NVIC_5" uuid="11676398-3af6-41c0-83e2-b7295c6ea71c" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="nvic">
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                        </array>
+                        <array name="interrupts"/>
                      </config_set>
                   </instance>
                </instances>
