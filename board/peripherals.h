@@ -15,7 +15,7 @@
 #include "fsl_flexcan.h"
 #include "fsl_adc.h"
 #include "fsl_pwm.h"
-#include "fsl_flexspi.h"
+#include "fsl_pit.h"
 
 #if defined(__cplusplus)
 extern "C" {
@@ -77,43 +77,26 @@ extern "C" {
 /* Definition of fault Fault3 ID */
 #define BOARD_PWM1_F0_FAULT3 kPWM_Fault_3
 
-/* Definitions for BOARAD_InitSPI2 functional group */
-/* Definition of peripheral ID */
-#define BOARD_FLEXSPI2_PERIPHERAL FLEXSPI2
-/* Size of LUT (Look-up Table) */
-#define BOARD_FLEXSPI2_LUT_LENGTH 64
-/* Read LUT sequence id in lookupTable stored in config block. */
-#define NOR_CMD_LUT_SEQ_IDX_READ_NORMAL 7
-/* Read Status LUT sequence id in lookupTable stored in config block. */
-#define NOR_CMD_LUT_SEQ_IDX_READ_FAST 13
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_READ_FAST_QUAD 0
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_READSTATUS 1
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_WRITEENABLE 2
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_ERASESECTOR 3
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_SINGLE 6
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_QUAD 4
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_READID 8
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_WRITESTATUSREG 9
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_ENTERQPI 10
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_EXITQPI 11
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_READSTATUSREG 12
-/*  */
-#define NOR_CMD_LUT_SEQ_IDX_ERASECHIP 5
-/* FLEXSPI2 interrupt vector ID (number). */
-#define BOARD_FLEXSPI2_IRQN FLEXSPI_IRQn
-/* FLEXSPI2 interrupt handler identifier. */
-#define BOARD_FLEXSPI2_IRQHANDLER 
+/* Definitions for BOARD_InitTIMER functional group */
+/* BOARD_InitTIMER defines for PIT */
+/* Definition of peripheral ID. */
+#define BOARD_PIT_PERIPHERAL PIT
+/* Definition of clock source frequency. */
+#define BOARD_PIT_CLK_FREQ 75000000UL
+/* Definition of ticks count for channel 0 - deprecated. */
+#define BOARD_PIT_0_TICKS 75000U
+/* PIT interrupt vector ID (number) - deprecated. */
+#define BOARD_PIT_0_IRQN PIT_IRQn
+/* PIT interrupt handler identifier - deprecated. */
+#define BOARD_PIT_0_IRQHANDLER PIT0_IRQHandler
+/* Definition of channel number for channel 0. */
+#define BOARD_PIT_CHANNEL_0 kPIT_Chnl_0
+/* Definition of ticks count for channel 0. */
+#define BOARD_PIT_CHANNEL_0_TICKS 75000U
+/* PIT interrupt vector ID (number). */
+#define BOARD_PIT_IRQN PIT_IRQn
+/* PIT interrupt handler identifier. */
+#define BOARD_PIT_IRQHANDLER PIT_IRQHandler
 
 /***********************************************************************************************************************
  * Global variables
@@ -132,8 +115,7 @@ extern const pwm_fault_param_t BOARD_PWM1_Fault0_fault_config;
 extern const pwm_fault_param_t BOARD_PWM1_Fault1_fault_config;
 extern const pwm_fault_param_t BOARD_PWM1_Fault2_fault_config;
 extern const pwm_fault_param_t BOARD_PWM1_Fault3_fault_config;
-extern const flexspi_config_t BOARD_FLEXSPI2_config;
-extern const uint32_t BOARD_FLEXSPI2_LUT[BOARD_FLEXSPI2_LUT_LENGTH];
+extern const pit_config_t BOARD_PIT_config;
 
 /***********************************************************************************************************************
  * Initialization functions
@@ -147,7 +129,9 @@ void BOARD_InitADC1(void);
 
 void BOARD_InitPWM(void);
 
-void BOARAD_InitSPI2(void);
+void BOARD_InitSPI2(void);
+
+void BOARD_InitTIMER(void);
 
 /***********************************************************************************************************************
  * BOARD_InitBootPeripherals function

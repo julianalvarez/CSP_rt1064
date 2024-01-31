@@ -853,14 +853,14 @@
                   <data type="Version">2.6.0</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexspi" description="FLEXSPI Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.pit" description="PIT Driver is not found in the toolchain/IDE project. The project will not compile!" problem_level="2" source="Peripherals">
                <feature name="enabled" evaluation="equal">
                   <data type="Boolean">true</data>
                </feature>
             </dependency>
-            <dependency resourceType="SWComponent" resourceId="platform.drivers.flexspi" description="An unsupported version of the FLEXSPI Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
-               <feature name="version" evaluation="equivalent">
-                  <data type="Version">2.5.0</data>
+            <dependency resourceType="SWComponent" resourceId="platform.drivers.pit" description="An unsupported version of the PIT Driver in the toolchain/IDE project. Required: ${required_value}, actual: ${actual_value}. The project might not compile correctly." problem_level="1" source="Peripherals">
+               <feature name="version" evaluation="compatible">
+                  <data type="Version">2.0.3</data>
                </feature>
             </dependency>
             <dependency resourceType="Tool" resourceId="Pins" description="The Pins tool is required by the Peripherals tool, but it is disabled." problem_level="2" source="Peripherals">
@@ -934,6 +934,7 @@
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -970,6 +971,7 @@
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -1123,6 +1125,7 @@
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -1169,6 +1172,7 @@
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
                      </config_set>
@@ -1308,23 +1312,21 @@
                   </instance>
                </instances>
             </functional_group>
-            <functional_group name="BOARAD_InitSPI2" uuid="3e2b5b66-eac8-47a6-8b46-0ed1f12c6570" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+            <functional_group name="BOARD_InitSPI2" uuid="3e2b5b66-eac8-47a6-8b46-0ed1f12c6570" called_from_default_init="false" id_prefix="BOARD_" core="core0">
                <description></description>
                <options/>
-               <dependencies>
-                  <dependency resourceType="ClockOutput" resourceId="FLEXSPI2_CLK_ROOT" description="FLEXSPI2_CLK_ROOT is inactive." problem_level="2" source="Peripherals:BOARAD_InitSPI2">
-                     <feature name="frequency" evaluation="greaterThan">
-                        <data type="Frequency" unit="Hz">0</data>
-                     </feature>
-                  </dependency>
-                  <dependency resourceType="ClockOutput" resourceId="AHB_CLK_ROOT" description="AHB_CLK_ROOT is inactive." problem_level="1" source="Peripherals:BOARAD_InitSPI2">
-                     <feature name="frequency" evaluation="greaterThan">
-                        <data type="Frequency" unit="Hz">0</data>
-                     </feature>
-                  </dependency>
-               </dependencies>
+               <dependencies/>
                <instances>
-                  <instance name="FLEXSPI2" uuid="754b67d7-14c2-4ba6-beb3-e3d1f68d857f" type="flexspi" type_id="flexspi_380e74d39208b17ae8a8dd5f2724ca53" mode="general" peripheral="FLEXSPI2" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                  <instance name="NVIC_5" uuid="11676398-3af6-41c0-83e2-b7295c6ea71c" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="nvic">
+                        <array name="interrupt_table">
+                           <struct name="0"/>
+                           <struct name="1"/>
+                        </array>
+                        <array name="interrupts"/>
+                     </config_set>
+                  </instance>
+                  <instance name="FLEXSPI" uuid="3bbcc0ea-2fe8-4cfa-bc40-8578f9484de2" type="flexspi" type_id="flexspi_380e74d39208b17ae8a8dd5f2724ca53" mode="general" peripheral="FLEXSPI" enabled="false" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="fsl_flexspi">
                         <struct name="flexspiConfig">
                            <setting name="rxSampleClock" value="kFLEXSPI_ReadSampleClkLoopbackInternally"/>
@@ -1402,12 +1404,53 @@
                         <array name="devices_configs"/>
                      </config_set>
                   </instance>
-                  <instance name="NVIC_5" uuid="11676398-3af6-41c0-83e2-b7295c6ea71c" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+               </instances>
+            </functional_group>
+            <functional_group name="BOARD_InitTIMER" uuid="0401e36a-c14d-4e76-ae26-f55003b9fc85" called_from_default_init="false" id_prefix="BOARD_" core="core0">
+               <description></description>
+               <options/>
+               <dependencies>
+                  <dependency resourceType="ClockOutput" resourceId="PERCLK_CLK_ROOT" description="PERCLK_CLK_ROOT is inactive." problem_level="2" source="Peripherals:BOARD_InitTIMER">
+                     <feature name="frequency" evaluation="greaterThan">
+                        <data type="Frequency" unit="Hz">0</data>
+                     </feature>
+                  </dependency>
+               </dependencies>
+               <instances>
+                  <instance name="NVIC_6" uuid="9ef314ad-3e44-4315-ba94-08c1ea43d25d" type="nvic" type_id="nvic_57b5eef3774cc60acaede6f5b8bddc67" mode="general" peripheral="NVIC" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
                      <config_set name="nvic">
                         <array name="interrupt_table">
                            <struct name="0"/>
+                           <struct name="1"/>
                         </array>
                         <array name="interrupts"/>
+                     </config_set>
+                  </instance>
+                  <instance name="PIT" uuid="d35b4660-efc7-40fd-946d-c0038a013022" type="pit" type_id="pit_ab54f91356454adb874dafbb69e655fd" mode="LPTMR_GENERAL" peripheral="PIT" enabled="true" comment="" custom_name_enabled="false" editing_lock="false">
+                     <config_set name="fsl_pit">
+                        <setting name="enableRunInDebug" value="false"/>
+                        <setting name="enableSharedInterrupt" value="true"/>
+                        <struct name="sharedInterrupt">
+                           <setting name="IRQn" value="PIT_IRQn"/>
+                           <setting name="enable_interrrupt" value="enabled"/>
+                           <setting name="enable_priority" value="false"/>
+                           <setting name="priority" value="0"/>
+                           <setting name="enable_custom_name" value="false"/>
+                        </struct>
+                        <struct name="timingConfig">
+                           <setting name="clockSource" value="BusInterfaceClock"/>
+                           <setting name="clockSourceFreq" value="ClocksTool_DefaultInit"/>
+                        </struct>
+                        <array name="channels">
+                           <struct name="0">
+                              <setting name="channel_id" value="CHANNEL_0"/>
+                              <setting name="channelNumber" value="0"/>
+                              <setting name="enableChain" value="false"/>
+                              <setting name="timerPeriod" value="0.001s"/>
+                              <setting name="startTimer" value="true"/>
+                              <setting name="enableInterrupt" value="true"/>
+                           </struct>
+                        </array>
                      </config_set>
                   </instance>
                </instances>
