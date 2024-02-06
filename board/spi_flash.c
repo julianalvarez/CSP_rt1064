@@ -8,12 +8,13 @@
 
 #include "spi_flash.h"
 
-status_t _wait_bus_busy(FLEXSPI_Type *base);
-void _enable_cache(flexspi_cache_status_t cacheStatus);
-void _disable_cache(flexspi_cache_status_t *cacheStatus);
-status_t _write_enable(FLEXSPI_Type *base, uint32_t baseAddr);
-status_t _enable_quad_mode(FLEXSPI_Type *base);
-status_t _get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId);
+__RAMFUNC(RAM2) status_t _wait_bus_busy(FLEXSPI_Type *base);
+__RAMFUNC(RAM2) void _enable_cache(flexspi_cache_status_t cacheStatus);
+__RAMFUNC(RAM2) void _disable_cache(flexspi_cache_status_t *cacheStatus);
+__RAMFUNC(RAM2) status_t _write_enable(FLEXSPI_Type *base, uint32_t baseAddr);
+__RAMFUNC(RAM2) status_t _enable_quad_mode(FLEXSPI_Type *base);
+__RAMFUNC(RAM2) status_t _get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId);
+
 
 const uint32_t FLEXSPI_customLUT[CUSTOM_LUT_LENGTH] = {
 		 /* Fast read quad mode - SDR */
@@ -86,7 +87,7 @@ const uint32_t FLEXSPI_customLUT[CUSTOM_LUT_LENGTH] = {
 
 void SPIFLASH_init(void)
 {
-    uint8_t vendorID = 0;
+	uint8_t vendorID = 0;
 
     FLEXSPI_UpdateLUT(BOARD_FLEXSPI, 0, FLEXSPI_customLUT, CUSTOM_LUT_LENGTH);
 
@@ -132,14 +133,14 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
     {
         return status;
     }
-
+    __disable_irq();
     status = _wait_bus_busy(base);
 
     // Do software reset.
     FLEXSPI_SoftwareReset(base);
 
     _enable_cache(cacheStatus);
-
+    __enable_irq();
     return status;
 }
 
@@ -202,7 +203,7 @@ status_t SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src
     flexspi_cache_status_t cacheStatus;
     _disable_cache(&cacheStatus);
 
-    /* Write enable */
+    // Write enable
     status = _write_enable(base, dstAddr);
 
     if (status != kStatus_Success)
@@ -210,7 +211,7 @@ status_t SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src
         return status;
     }
 
-    /* Prepare page program command */
+    // Prepare page program command
     flashXfer.deviceAddress = dstAddr;
     flashXfer.port          = FLASH_PORT;
     flashXfer.cmdType       = kFLEXSPI_Read;
@@ -227,7 +228,7 @@ status_t SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src
 
     status = _wait_bus_busy(base);
 
-    /* Do software reset or clear AHB buffer directly. */
+    // Do software reset or clear AHB buffer directly.
     FLEXSPI_SoftwareReset(base);
 
     _enable_cache(cacheStatus);
@@ -332,6 +333,25 @@ void _disable_cache(flexspi_cache_status_t *cacheStatus)
         cacheStatus->ICacheEnableFlag = true;
     }
 }
+/*
+int8_t Read_FLASH (uint32_t Address, uint8_t* pData, uint32_t Size)
+{
+    int8_t             Status;
+    uint8_t*            pSrc;
+    uint8_t*            pDst;
+
+    Status = FLASH_COMPLETE;
+    pSrc = (uint8_t*)Address;
+    pDst = pData;
+
+    Address += base_addr;
+    while (Size--) {
+        *pDst++ = *pSrc++;
+    }
+
+    return (Status);
+}
+*/
 status_t _get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId)
 {
     uint32_t temp;
@@ -396,4 +416,3 @@ status_t _enable_quad_mode(FLEXSPI_Type *base)
 
     return status;
 }
-

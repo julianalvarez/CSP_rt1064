@@ -8,6 +8,7 @@
 #define _FSL_CACHE_H_
 
 #include "fsl_common.h"
+#include <cr_section_macros.h>
 
 /*!
  * @addtogroup cache_armv7_m7
@@ -422,7 +423,7 @@ void ICACHE_InvalidateByRange(uint32_t address, uint32_t size_byte);
  * to align to the cache line size if startAddr is not aligned. For the size_byte, application should
  * make sure the alignment or make sure the right operation order if the size_byte is not aligned.
  */
-void DCACHE_InvalidateByRange(uint32_t address, uint32_t size_byte);
+__RAMFUNC(RAM2) void DCACHE_InvalidateByRange(uint32_t address, uint32_t size_byte);
 
 /*!
  * @brief Cleans all data caches by range.

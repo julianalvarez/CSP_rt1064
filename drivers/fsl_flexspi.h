@@ -12,6 +12,7 @@
 #include <stddef.h>
 #include "fsl_device_registers.h"
 #include "fsl_common.h"
+#include <cr_section_macros.h>
 
 /*!
  * @addtogroup flexspi
@@ -370,7 +371,7 @@ uint32_t FLEXSPI_GetInstance(FLEXSPI_Type *base);
  * @param base FLEXSPI base pointer.
  * @param status interrupt status.
  */
-status_t FLEXSPI_CheckAndClearError(FLEXSPI_Type *base, uint32_t status);
+__RAMFUNC(RAM2) status_t FLEXSPI_CheckAndClearError(FLEXSPI_Type *base, uint32_t status);
 
 /*!
  * @brief Initializes the FLEXSPI module and internal state.
@@ -428,7 +429,7 @@ void FLEXSPI_SetFlashConfig(FLEXSPI_Type *base, flexspi_device_config_t *config,
  *
  * @param base FLEXSPI peripheral base address.
  */
-static inline void FLEXSPI_SoftwareReset(FLEXSPI_Type *base)
+__RAMFUNC(RAM2) static inline void FLEXSPI_SoftwareReset(FLEXSPI_Type *base)
 {
     base->MCR0 |= FLEXSPI_MCR0_SWRESET_MASK;
     while (0U != (base->MCR0 & FLEXSPI_MCR0_SWRESET_MASK))
@@ -612,7 +613,7 @@ static inline uint32_t FLEXSPI_GetInterruptStatusFlags(FLEXSPI_Type *base)
  * @param base FLEXSPI peripheral base address.
  * @param mask FLEXSPI interrupt source.
  */
-static inline void FLEXSPI_ClearInterruptStatusFlags(FLEXSPI_Type *base, uint32_t mask)
+__RAMFUNC(RAM2) static inline void FLEXSPI_ClearInterruptStatusFlags(FLEXSPI_Type *base, uint32_t mask)
 {
     base->INTR = mask;
 }
@@ -683,7 +684,7 @@ static inline flexspi_ahb_error_code_t FLEXSPI_GetAHBCommandErrorCode(FLEXSPI_Ty
  * @retval true Bus is idle.
  * @retval false Bus is busy.
  */
-static inline bool FLEXSPI_GetBusIdleStatus(FLEXSPI_Type *base)
+__RAMFUNC(RAM2) static inline bool FLEXSPI_GetBusIdleStatus(FLEXSPI_Type *base)
 {
     return (0U != (base->STS0 & FLEXSPI_STS0_ARBIDLE_MASK)) && (0U != (base->STS0 & FLEXSPI_STS0_SEQIDLE_MASK));
 }
@@ -748,7 +749,7 @@ static inline void FLEXSPI_EnableAHBParallelMode(FLEXSPI_Type *base, bool enable
  * @param cmd Command sequence array.
  * @param count Number of sequences.
  */
-void FLEXSPI_UpdateLUT(FLEXSPI_Type *base, uint32_t index, const uint32_t *cmd, uint32_t count);
+__RAMFUNC(RAM2) void FLEXSPI_UpdateLUT(FLEXSPI_Type *base, uint32_t index, const uint32_t *cmd, uint32_t count);
 
 /*!
  * @brief Writes data into FIFO.
@@ -785,7 +786,7 @@ static inline uint32_t FLEXSPI_ReadData(FLEXSPI_Type *base, uint8_t fifoIndex)
  * @retval kStatus_FLEXSPI_IpCommandSequenceError IP command sequence error detected
  * @retval kStatus_FLEXSPI_IpCommandGrantTimeout IP command grant timeout detected
  */
-status_t FLEXSPI_WriteBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size);
+__RAMFUNC(RAM2) status_t FLEXSPI_WriteBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size);
 
 /*!
  * @brief Receives a buffer of data bytes using a blocking method.
@@ -798,7 +799,7 @@ status_t FLEXSPI_WriteBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size)
  * @retval kStatus_FLEXSPI_IpCommandSequenceError IP command sequencen error detected
  * @retval kStatus_FLEXSPI_IpCommandGrantTimeout IP command grant timeout detected
  */
-status_t FLEXSPI_ReadBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size);
+__RAMFUNC(RAM2) status_t FLEXSPI_ReadBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size);
 
 /*!
  * @brief Execute command to transfer a buffer data bytes using a blocking method.
@@ -809,7 +810,7 @@ status_t FLEXSPI_ReadBlocking(FLEXSPI_Type *base, uint8_t *buffer, size_t size);
  * @retval kStatus_FLEXSPI_IpCommandSequenceError IP command sequence error detected
  * @retval kStatus_FLEXSPI_IpCommandGrantTimeout IP command grant timeout detected
  */
-status_t FLEXSPI_TransferBlocking(FLEXSPI_Type *base, flexspi_transfer_t *xfer);
+__RAMFUNC(RAM2) status_t FLEXSPI_TransferBlocking(FLEXSPI_Type *base, flexspi_transfer_t *xfer);
 /*! @} */
 
 /*!

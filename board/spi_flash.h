@@ -15,6 +15,7 @@
 #include "pin_mux.h"
 #include "fsl_cache.h"
 #include "fsl_debug_console.h"
+#include <cr_section_macros.h>
 
 #define FLASH_PORT                      		kFLEXSPI_PortA1
 #define FLASH_BUSY_STATUS_POL    				1
@@ -49,10 +50,34 @@ typedef struct _flexspi_cache_status
     volatile bool ICacheEnableFlag;
 } flexspi_cache_status_t;
 
+// Enums **********************************************************************
+typedef enum
+{
+  FLASH_COMPLETE = 0,
+  FLASH_BUSY = 1,
+  FLASH_ERROR_RD,
+  FLASH_ERROR_PGS,
+  FLASH_ERROR_PGP,
+  FLASH_ERROR_PGA,
+  FLASH_ERROR_WRP,
+  FLASH_ERROR_PROGRAM,
+  FLASH_ERROR_OPERATION
+}FLASH_Status;
 
-void		SPIFLASH_init(void);
-status_t 	SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
-status_t 	SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src);
-status_t	SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length);
+
+int8_t 		Read_FLASH(uint32_t Address, uint8_t* pData, uint32_t Size);
+int8_t 		WriteByte_FLASH (uint32_t Address, uint8_t Data);
+int8_t 		WriteWord_FLASH (uint32_t Address, uint16_t Data);
+int8_t 		WriteArray_FLASH (uint32_t Address, uint8_t* pData, uint32_t Size);
+int8_t 		Erase_FLASH (uint32_t Address, uint32_t Size);
+int8_t 		Close_FLASH (void);
+
+
+__RAMFUNC(RAM2) void		SPIFLASH_init(void);
+__RAMFUNC(RAM2) status_t 	SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
+__RAMFUNC(RAM2) status_t 	SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src);
+__RAMFUNC(RAM2) status_t	SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length);
+
+
 
 #endif /* SPI_FLASH_H_ */
