@@ -144,12 +144,16 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
     return status;
 }
 
-status_t SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src)
+status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 {
     status_t status;
     flexspi_transfer_t flashXfer;
-
     flexspi_cache_status_t cacheStatus;
+    static uint8_t program_buffer[1];
+    static uint8_t read_buffer_check[1];
+
+    program_buffer[0] = Data;
+
     _disable_cache(&cacheStatus);
 
     // To make sure external flash be in idle status, added wait for busy before program data for
@@ -175,8 +179,8 @@ status_t SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint3
     flashXfer.cmdType       = kFLEXSPI_Write;
     flashXfer.SeqNumber     = 1;
     flashXfer.seqIndex      = NOR_CMD_LUT_SEQ_IDX_PAGEPROGRAM_QUAD;
-    flashXfer.data          = (uint32_t *)src;
-    flashXfer.dataSize      = FLASH_PAGE_SIZE;
+    flashXfer.data          = (uint32_t *)program_buffer;
+    flashXfer.dataSize      = 1;
     status                  = FLEXSPI_TransferBlocking(base, &flashXfer);
 
     if (status != kStatus_Success)
@@ -187,10 +191,30 @@ status_t SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint3
     status = _wait_bus_busy(base);
 
     // Do software reset or clear AHB buffer directly.
-
     FLEXSPI_SoftwareReset(base);
 
     _enable_cache(cacheStatus);
+
+    if (status != kStatus_Success)
+    {
+        PRINTF("Page program failure !\r\n");
+        return status;
+    }
+
+    DCACHE_InvalidateByRange(EXAMPLE_FLEXSPI_AMBA_BASE + dstAddr, 1);
+
+    memcpy(read_buffer_check, (void *)(EXAMPLE_FLEXSPI_AMBA_BASE + dstAddr),
+           sizeof(read_buffer_check));
+
+    if (memcmp(read_buffer_check, program_buffer, sizeof(program_buffer)) != 0)
+    {
+        PRINTF("Program data -  read out data value incorrect !\r\n ");
+        return status;
+    }
+    else
+    {
+        PRINTF("Program data - successfully. \r\n");
+    }
 
     return status;
 }

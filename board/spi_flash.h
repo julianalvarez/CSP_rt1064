@@ -25,7 +25,7 @@
 #define CUSTOM_LUT_LENGTH        				60
 #define EXAMPLE_FLEXSPI_AMBA_BASE       		FlexSPI2_AMBA_BASE
 #define SECTOR_SIZE                    			0x1000 // 4K
-#define EXAMPLE_SECTOR                  		100
+#define EXAMPLE_SECTOR                  		128
 
 #define BOARD_FLEXSPI							FLEXSPI2
 
@@ -75,7 +75,7 @@ int8_t 		Close_FLASH (void);
 
 __RAMFUNC(RAM2) void		SPIFLASH_init(void);
 __RAMFUNC(RAM2) status_t 	SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
-__RAMFUNC(RAM2) status_t 	SPIFLASH_page_program(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src);
+__RAMFUNC(RAM2) status_t 	SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
 __RAMFUNC(RAM2) status_t	SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length);
 
 
