@@ -64,18 +64,10 @@ typedef enum
   FLASH_ERROR_OPERATION
 }FLASH_Status;
 
-
-int8_t 		Read_FLASH(uint32_t Address, uint8_t* pData, uint32_t Size);
-int8_t 		WriteByte_FLASH (uint32_t Address, uint8_t Data);
-int8_t 		WriteWord_FLASH (uint32_t Address, uint16_t Data);
-int8_t 		WriteArray_FLASH (uint32_t Address, uint8_t* pData, uint32_t Size);
-int8_t 		Erase_FLASH (uint32_t Address, uint32_t Size);
-int8_t 		Close_FLASH (void);
-
-
 __RAMFUNC(RAM2) void		SPIFLASH_init(void);
 __RAMFUNC(RAM2) status_t 	SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
-__RAMFUNC(RAM2) status_t 	SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
+__RAMFUNC(RAM2) int8_t 		SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
+__RAMFUNC(RAM2) int8_t 		SPIFLASH_ReadByte (uint32_t Address, uint8_t* pData, uint32_t Size);
 __RAMFUNC(RAM2) status_t	SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length);
 
 

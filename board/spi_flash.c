@@ -84,6 +84,7 @@ const uint32_t FLEXSPI_customLUT[CUSTOM_LUT_LENGTH] = {
 		 FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0xC7, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
 };
 
+unsigned long base_addr = 0x70080000;
 
 void SPIFLASH_init(void)
 {
@@ -144,7 +145,7 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
     return status;
 }
 
-status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
+int8_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 {
     status_t status;
     flexspi_transfer_t flashXfer;
@@ -162,7 +163,7 @@ status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (kStatus_Success != status)
     {
-        return status;
+        return FLASH_ERROR_OPERATION;
     }
 
     // Write enable.
@@ -170,7 +171,7 @@ status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (status != kStatus_Success)
     {
-        return status;
+        return FLASH_ERROR_OPERATION;
     }
 
     // Prepare page program command
@@ -185,7 +186,7 @@ status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (status != kStatus_Success)
     {
-        return status;
+        return FLASH_ERROR_OPERATION;
     }
 
     status = _wait_bus_busy(base);
@@ -197,8 +198,8 @@ status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (status != kStatus_Success)
     {
-        PRINTF("Page program failure !\r\n");
-        return status;
+        PRINTF("Byte program failure !\r\n");
+        return FLASH_ERROR_OPERATION;
     }
 
     DCACHE_InvalidateByRange(EXAMPLE_FLEXSPI_AMBA_BASE + dstAddr, 1);
@@ -208,15 +209,15 @@ status_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (memcmp(read_buffer_check, program_buffer, sizeof(program_buffer)) != 0)
     {
-        PRINTF("Program data -  read out data value incorrect !\r\n ");
-        return status;
+        PRINTF("Program Byte -  read out data value incorrect !\r\n ");
+        return FLASH_ERROR_OPERATION;
     }
     else
     {
-        PRINTF("Program data - successfully. \r\n");
+        PRINTF("Program Byte - successfully. \r\n");
     }
 
-    return status;
+    return FLASH_COMPLETE;
 }
 
 status_t SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length)
@@ -357,25 +358,7 @@ void _disable_cache(flexspi_cache_status_t *cacheStatus)
         cacheStatus->ICacheEnableFlag = true;
     }
 }
-/*
-int8_t Read_FLASH (uint32_t Address, uint8_t* pData, uint32_t Size)
-{
-    int8_t             Status;
-    uint8_t*            pSrc;
-    uint8_t*            pDst;
 
-    Status = FLASH_COMPLETE;
-    pSrc = (uint8_t*)Address;
-    pDst = pData;
-
-    Address += base_addr;
-    while (Size--) {
-        *pDst++ = *pSrc++;
-    }
-
-    return (Status);
-}
-*/
 status_t _get_vendor_id(FLEXSPI_Type *base, uint8_t *vendorId)
 {
     uint32_t temp;
@@ -439,4 +422,22 @@ status_t _enable_quad_mode(FLEXSPI_Type *base)
     _enable_cache(cacheStatus);
 
     return status;
+}
+
+int8_t SPIFLASH_ReadByte (uint32_t Address, uint8_t* pData, uint32_t Size)
+{
+    int8_t             Status;
+    uint8_t*            pSrc;
+    uint8_t*            pDst;
+
+    Status = FLASH_COMPLETE;
+    pSrc = (uint8_t*)Address;
+    pDst = pData;
+
+    Address += base_addr;
+    while (Size--) {
+        *pDst++ = *pSrc++;
+    }
+
+    return (Status);
 }
