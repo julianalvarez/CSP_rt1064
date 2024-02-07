@@ -104,7 +104,8 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
 {
     status_t status;
     flexspi_transfer_t flashXfer;
-
+    static uint8_t s_nor_program_buffer[256];
+    static uint8_t s_nor_read_buffer[256];
     flexspi_cache_status_t cacheStatus;
     _disable_cache(&cacheStatus);
 
@@ -119,7 +120,7 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
 
     if (status != kStatus_Success)
     {
-        return status;
+        return FLASH_ERROR_OPERATION;
     }
 
     flashXfer.deviceAddress = address;
@@ -132,7 +133,7 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
 
     if (status != kStatus_Success)
     {
-        return status;
+        return FLASH_ERROR_OPERATION;
     }
     __disable_irq();
     status = _wait_bus_busy(base);
@@ -142,7 +143,24 @@ status_t SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
 
     _enable_cache(cacheStatus);
     __enable_irq();
-    return status;
+
+    memset(s_nor_program_buffer, 0xFFU, sizeof(s_nor_program_buffer));
+
+    DCACHE_InvalidateByRange(EXAMPLE_FLEXSPI_AMBA_BASE + address, FLASH_PAGE_SIZE);
+
+    memcpy(s_nor_read_buffer, (void *)(EXAMPLE_FLEXSPI_AMBA_BASE + address),
+           sizeof(s_nor_read_buffer));
+
+    if (memcmp(s_nor_program_buffer, s_nor_read_buffer, sizeof(s_nor_program_buffer)))
+    {
+        PRINTF("Erase data -  read out data value incorrect !\r\n ");
+        return FLASH_ERROR_OPERATION;
+    }
+    else
+    {
+        PRINTF("Erase data - successfully. \r\n");
+    }
+    return FLASH_COMPLETE;
 }
 
 int8_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
@@ -220,6 +238,23 @@ int8_t SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
     return FLASH_COMPLETE;
 }
 
+int8_t WriteWord_FLASH (uint32_t Address, uint16_t Data)
+{
+    int8_t      Status;
+    uint8_t*    pData8;
+    uint8_t     i;
+
+    Status = FLASH_COMPLETE;
+
+    pData8 = (uint8_t*) &Data;
+
+    for (i = 0; i < 2; i++) {
+        if (SPIFLASH_WriteByte(BOARD_FLEXSPI, Address + i, pData8[i]) != 0){
+            return FLASH_ERROR_OPERATION;
+        }
+    }
+    return (Status);
+}
 status_t SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length)
 {
     status_t status;
