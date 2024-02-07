@@ -418,3 +418,32 @@ status_t _enable_quad_mode(FLEXSPI_Type *base)
 
     return status;
 }
+
+int8_t Erase_FLASH (uint32_t Address, uint32_t Size)
+{
+	int8_t status;
+    uint32_t addr;
+
+    status = FLASH_COMPLETE;
+
+    Address = EXAMPLE_FLEXSPI_AMBA_BASE + Address;
+
+    if (Address >= base_addr && Size == 0x8000) {
+    	Address = Address - EXAMPLE_FLEXSPI_AMBA_BASE;
+		PRINTF("Erasing Serial NOR over FlexSPI...\r\n");
+		for(addr = Address; addr <= (Address+0x7000); addr=addr+0x1000)
+		{
+			// Erase sector.
+			status = SFLASH_erase_sector(BOARD_FLEXSPI, addr);
+			if (status != FLASH_COMPLETE)
+			{
+				PRINTF("Erase sector failure !\r\n");
+				status = FLASH_ERROR_OPERATION;
+			}
+		}
+    }else
+    {
+    	status = FLASH_ERROR_OPERATION;
+    }
+    return status;
+}

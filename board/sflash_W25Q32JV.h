@@ -62,6 +62,7 @@ typedef enum
 
 __RAMFUNC(RAM2) void		SFLASH_init(void);
 __RAMFUNC(RAM2) int8_t 		SFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
+__RAMFUNC(RAM2) int8_t 		Erase_FLASH (uint32_t Address, uint32_t Size);
 __RAMFUNC(RAM2) int8_t 		SFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
 __RAMFUNC(RAM2) int8_t 		WriteWord_FLASH (uint32_t Address, uint16_t Data);
 
