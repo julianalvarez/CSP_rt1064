@@ -5,14 +5,11 @@
  *      Author: PLANTIUM
  */
 
-#ifndef SPI_FLASH_H_
-#define SPI_FLASH_H_
+#ifndef SFLASH_W25Q32JV_H_
+#define SFLASH_W25Q32JV_H_
 
 #include <stdint.h>
 #include "fsl_flexspi.h"
-#include "peripherals.h"
-#include "board.h"
-#include "pin_mux.h"
 #include "fsl_cache.h"
 #include "fsl_debug_console.h"
 #include <cr_section_macros.h>
@@ -25,7 +22,6 @@
 #define CUSTOM_LUT_LENGTH        				60
 #define EXAMPLE_FLEXSPI_AMBA_BASE       		FlexSPI2_AMBA_BASE
 #define SECTOR_SIZE                    			0x1000 // 4K
-#define EXAMPLE_SECTOR                  		128
 
 #define BOARD_FLEXSPI							FLEXSPI2
 
@@ -64,13 +60,9 @@ typedef enum
   FLASH_ERROR_OPERATION
 }FLASH_Status;
 
-__RAMFUNC(RAM2) void		SPIFLASH_init(void);
-__RAMFUNC(RAM2) status_t 	SPIFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
-__RAMFUNC(RAM2) int8_t 		SPIFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
+__RAMFUNC(RAM2) void		SFLASH_init(void);
+__RAMFUNC(RAM2) int8_t 		SFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address);
+__RAMFUNC(RAM2) int8_t 		SFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data);
 __RAMFUNC(RAM2) int8_t 		WriteWord_FLASH (uint32_t Address, uint16_t Data);
-__RAMFUNC(RAM2) int8_t 		SPIFLASH_ReadByte (uint32_t Address, uint8_t* pData, uint32_t Size);
-__RAMFUNC(RAM2) status_t	SPIFLASH_read(FLEXSPI_Type *base, uint32_t dstAddr, const uint32_t *src, uint32_t length);
 
-
-
-#endif /* SPI_FLASH_H_ */
+#endif /* SFLASH_W25Q32JV_H_ */
