@@ -21,7 +21,7 @@
 #define FLASH_QUAD_ENABLE       				0x40
 #define CUSTOM_LUT_LENGTH        				60
 #define EXAMPLE_FLEXSPI_AMBA_BASE       		FlexSPI2_AMBA_BASE
-#define SECTOR_SIZE                    			0x1000 // 4K
+#define FLASH_SECTOR_SIZE                    	0x1000 // 4K
 
 #define BOARD_FLEXSPI							FLEXSPI2
 

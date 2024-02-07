@@ -246,6 +246,8 @@ int8_t WriteWord_FLASH (uint32_t Address, uint16_t Data)
 
     Status = FLASH_COMPLETE;
 
+    Address = Address - base_addr;
+
     pData8 = (uint8_t*) &Data;
 
     for (i = 0; i < 2; i++) {

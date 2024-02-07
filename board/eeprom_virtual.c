@@ -29,21 +29,25 @@ typedef enum PAGE_STATUS_t {                /* Page status definitions */
 } PAGE_STATUS;
 
 /* Global variable used to store variable value in read sequence */
-//static uint32_t _nbOfVar;
-//static uint32_t _lastWriteAddress;
+static uint32_t _nbOfVar;
+static uint32_t _lastWriteAddress;
 
 /* Easier access to eeprom pages definitions */
-//static const EEPROM_PAGE eepromPages[] = {{PAGE0_BASE_ADDRESS, PAGE0_END_ADDRESS},  //, PAGE0_ID},
-//                                          {PAGE1_BASE_ADDRESS, PAGE1_END_ADDRESS}}; //, PAGE1_ID}};
+static const EEPROM_PAGE eepromPages[] = {{PAGE0_BASE_ADDRESS, PAGE0_END_ADDRESS},  //, PAGE0_ID},
+                                          {PAGE1_BASE_ADDRESS, PAGE1_END_ADDRESS}}; //, PAGE1_ID}};
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-//static uint16_t      EE_FindValidPage(void);
+static uint16_t      		EE_FindValidPage(void);
+static EEPROM_RESULT 		EE_VerifyBlankPage(uint16_t sectorIdx);
+static EEPROM_RESULT 		EE_PageTransfer(void);
+static EEPROM_RESULT 		EE_VerifyValidPageFull(void);
+static EEPROM_RESULT 		EE_VerifyPageFullWriteVariable(uint16_t destinationPage, uint16_t VirtAddress, uint16_t Data);
 
 /**
   *   Restore the pages to a known good state in case of page's status
   *   corruption after a power loss.
-  *//*
+  */
 EEPROM_RESULT EE_Init(uint32_t nbOfVar)
 {
     uint16_t validPage, secondaryPage;
@@ -95,10 +99,10 @@ EEPROM_RESULT EE_Init(uint32_t nbOfVar)
         return RESULT_OK;
     }
 }
-*/
+
 /**
   * @brief  Find valid Page
-  *//*
+  */
 static uint16_t EE_FindValidPage(void)
 {
     uint16_t PageStatus0, PageStatus1;
@@ -136,10 +140,10 @@ static uint16_t EE_FindValidPage(void)
     }
 
     return 0xFFFF;
-}*/
+}
 /**
   * @brief  Erases PAGE and PAGE1 and writes VALID_PAGE header to PAGE
-  *//*
+  */
 EEPROM_RESULT EE_Format(void)
 {
     FLASH_Status flashStatus;
@@ -161,4 +165,183 @@ EEPROM_RESULT EE_Format(void)
     }
 
     return RESULT_OK;
-}*/
+}
+
+/**
+  * @brief  Verifies if the indicated page is empty
+  */
+static EEPROM_RESULT EE_VerifyBlankPage(uint16_t sectorIdx)
+{
+    uint32_t address, endAddress;
+
+    if (sectorIdx > 1) {
+        return RESULT_ERROR;
+    }
+
+    endAddress = eepromPages[sectorIdx].pageEnd;
+    for (address = eepromPages[sectorIdx].pageStart; address < endAddress; address += 4) {
+        if (*(uint32_t*)address != 0xFFFFFFFF) {
+            return RESULT_ERROR;
+        }
+    }
+
+    return RESULT_OK;
+}
+
+static EEPROM_RESULT EE_PageTransfer(void)
+{
+    uint16_t validPage, destinationPage;
+    FLASH_Status flashStatus;
+    EEPROM_RESULT eepromStatus;
+    uint32_t varIdx;
+    uint16_t varData;
+
+    validPage = EE_FindValidPage();
+
+    if (validPage == 0) {
+        destinationPage = 1;
+    } else if (validPage == 1) {
+        destinationPage = 0;
+    } else {
+        // valid page not found
+        return RESULT_NOT_FOUND;
+    }
+
+    // Clear destination page
+    if (EE_VerifyBlankPage(destinationPage) != RESULT_OK) {
+        flashStatus = Erase_FLASH(eepromPages[destinationPage].pageStart,PAGE_SIZE);
+        if (flashStatus != FLASH_COMPLETE) {
+            return RESULT_ERROR;
+        }
+    }
+    /* Transfer process: transfer variables from old to the new active page */
+    _lastWriteAddress = ADDRESS_INVALID;
+    for (varIdx = 0; varIdx < _nbOfVar; varIdx++) {
+        eepromStatus = EE_ReadVariable(varIdx, &varData);
+        if (eepromStatus == RESULT_OK) {
+            eepromStatus = EE_VerifyPageFullWriteVariable(destinationPage, varIdx, varData);
+            if (eepromStatus != RESULT_OK) {
+                return eepromStatus;
+            }
+        }
+    }
+    /* Set the new Page status to RECEIVE_DATA status */
+    flashStatus = WriteWord_FLASH(eepromPages[destinationPage].pageStart, RECEIVE_DATA);
+    if (flashStatus != FLASH_COMPLETE) {
+        return RESULT_ERROR;
+    }
+
+    /* Erase the old Page: Set old Page status to ERASED status */
+    flashStatus = WriteWord_FLASH(eepromPages[validPage].pageStart, TO_DELETE);
+    if (flashStatus != FLASH_COMPLETE) {
+        return RESULT_ERROR;
+    }
+    flashStatus = Erase_FLASH(eepromPages[validPage].pageStart,PAGE_SIZE);
+    if (flashStatus != FLASH_COMPLETE) {
+        return RESULT_ERROR;
+    }
+
+    /* Set new Page status to VALID_PAGE status */
+    flashStatus = WriteWord_FLASH(eepromPages[destinationPage].pageStart, VALID_PAGE);
+    if (flashStatus != FLASH_COMPLETE) {
+        return RESULT_ERROR;
+    }
+
+    return RESULT_OK;
+}
+static EEPROM_RESULT EE_VerifyValidPageFull(void)
+{
+    uint16_t validPage;
+
+    validPage = EE_FindValidPage();
+    if (validPage > 1) {
+        return RESULT_ERROR;
+    }
+
+#if USE_REDUCED_PAGE_SIZE
+    if (*(uint32_t*)(eepromPages[validPage].pageStart + 0x50) == 0xFFFFFFFF) {
+#else
+    if (*(uint32_t*)(eepromPages[validPage].pageEnd - 4) == 0xFFFFFFFF) {
+#endif
+        return RESULT_OK;
+    } else {
+        return RESULT_PAGE_FULL;
+    }
+}
+
+/**
+  * @brief  Returns the last stored variable data, if found, which correspond to
+  *   the passed virtual address
+  */
+EEPROM_RESULT EE_ReadVariable(uint16_t virtAddress, uint16_t* data)
+{
+	uint16_t validPage;
+	uint16_t addressValue;
+	uint32_t address, pageStartAddress;
+
+	/* Get active Page for read operation */
+	validPage = EE_FindValidPage();
+	if (validPage > 1) {
+		return  RESULT_NOT_VALID_PAGE;
+	}
+
+	if (virtAddress > _nbOfVar){
+		return  RESULT_NOT_FOUND;
+	}
+
+	/* Get the valid Page start end Address */
+	pageStartAddress = eepromPages[validPage].pageStart;
+
+	/* Check each active page address starting from end */
+	for (address = eepromPages[validPage].pageEnd - 2; address > pageStartAddress; address -= 4) {
+		addressValue = (*( uint16_t*)address);
+		if (addressValue == virtAddress) {
+			/* Get content of Address-2 which is variable value */
+			*data = (*( uint16_t*)(address - 2));
+			return RESULT_OK;
+		}
+	}
+	return RESULT_NOT_FOUND;
+}
+
+/**
+  * @brief  Write variable
+  */
+static EEPROM_RESULT EE_VerifyPageFullWriteVariable(uint16_t destinationPage, uint16_t VirtAddress, uint16_t Data)
+{
+    FLASH_Status flashStatus;
+    uint32_t address, endAddress;
+
+    if (destinationPage >= 2) {
+        return RESULT_ERROR;
+    }
+
+    address = _lastWriteAddress;
+    if (_lastWriteAddress == ADDRESS_INVALID){
+        address = eepromPages[destinationPage].pageStart + 4; // Reserve space at beginning for page status
+    }
+    endAddress = eepromPages[destinationPage].pageEnd;
+
+    /* Check each active page address starting from begining */
+    while (address < endAddress) {
+        if ((*(uint32_t*)address) == 0xFFFFFFFF) {
+            flashStatus = WriteWord_FLASH(address, Data);
+            if (flashStatus != FLASH_COMPLETE) {
+                return RESULT_ERROR;
+            }
+            /* Set variable virtual address */
+            flashStatus = WriteWord_FLASH(address + 2, VirtAddress);
+            if (flashStatus != FLASH_COMPLETE) {
+                return RESULT_ERROR;
+            } else {
+                _lastWriteAddress = address + 4;
+                return RESULT_OK;
+            }
+        } else {
+            /* Next address location */
+            address = address + 4;
+        }
+    }
+
+    return RESULT_PAGE_FULL; // Cannot use verify page full as it always checks valid page
+}
