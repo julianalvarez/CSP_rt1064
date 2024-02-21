@@ -250,11 +250,14 @@ int8_t WriteWord_FLASH (uint32_t Address, uint16_t Data)
 
     pData8 = (uint8_t*) &Data;
 
+    __disable_irq();
     for (i = 0; i < 2; i++) {
         if (SFLASH_WriteByte(BOARD_FLEXSPI, Address + i, pData8[i]) != 0){
             return FLASH_ERROR_OPERATION;
         }
     }
+    __enable_irq();
+
     return (Status);
 }
 
