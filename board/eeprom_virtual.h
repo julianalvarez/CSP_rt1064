@@ -10,6 +10,7 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "types.h"
+#include <cr_section_macros.h>
 
 /* Defines -------------------------------------------------------------------*/
 typedef enum EEPROM_RESULT_t {
@@ -26,7 +27,7 @@ typedef enum EEPROM_RESULT_t {
 #define SECTOR_SIZE             (uint32_t)0x10000
 
 /* EEPROM start address in Flash */
-#define EEPROM_START_ADDRESS  ((uint32_t)0x70080000) /* EEPROM emulation start address:
+#define EEPROM_START_ADDRESS  ((uint32_t)0x70010000) /* EEPROM emulation start address:
                                                        Sectors 5 and 6. 16kB each */
 
 /* Pages 0 and 1 base and end addresses */
@@ -39,8 +40,9 @@ typedef enum EEPROM_RESULT_t {
 /* Exported types ------------------------------------------------------------*/
 /* Exported macro ------------------------------------------------------------*/
 /* Exported functions ------------------------------------------------------- */
-EEPROM_RESULT   			EE_Init(uint32_t nbOfVar);
-EEPROM_RESULT   			EE_Format(void);
-EEPROM_RESULT   			EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
+__RAMFUNC(RAM2) EEPROM_RESULT   			EE_Init(uint32_t nbOfVar);
+__RAMFUNC(RAM2) EEPROM_RESULT   			EE_Format(void);
+__RAMFUNC(RAM2) EEPROM_RESULT   			EE_ReadVariable(uint16_t VirtAddress, uint16_t* Data);
+__RAMFUNC(RAM2) EEPROM_RESULT   			EE_WriteVariable(uint16_t VirtAddress, uint16_t Data);
 
 #endif /* EEPROM_VIRTUAL_H_ */

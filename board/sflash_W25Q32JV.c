@@ -84,7 +84,7 @@ const uint32_t FLEXSPI_customLUT[CUSTOM_LUT_LENGTH] = {
 		 FLEXSPI_LUT_SEQ(kFLEXSPI_Command_SDR, kFLEXSPI_1PAD, 0xC7, kFLEXSPI_Command_STOP, kFLEXSPI_1PAD, 0),
 };
 
-unsigned long base_addr = 0x70080000;
+unsigned long base_addr = 0x70000000;
 
 void SFLASH_init(void)
 {
@@ -428,7 +428,7 @@ int8_t Erase_FLASH (uint32_t Address, uint32_t Size)
 
     status = FLASH_COMPLETE;
 
-    Address = EXAMPLE_FLEXSPI_AMBA_BASE + Address;
+    //Address = EXAMPLE_FLEXSPI_AMBA_BASE + Address;
 
     if (Address >= base_addr && Size == 0x8000) {
     	Address = Address - EXAMPLE_FLEXSPI_AMBA_BASE;
@@ -448,4 +448,22 @@ int8_t Erase_FLASH (uint32_t Address, uint32_t Size)
     	status = FLASH_ERROR_OPERATION;
     }
     return status;
+}
+
+int8_t Read_FLASH (uint32_t Address, uint8_t* pData, uint32_t Size)
+{
+    int8_t             Status;
+    uint8_t*            pSrc;
+    uint8_t*            pDst;
+
+    Status = FLASH_COMPLETE;
+    pSrc = (uint8_t*)Address;
+    pDst = pData;
+
+    Address += base_addr;
+    while (Size--) {
+        *pDst++ = *pSrc++;
+    }
+
+    return (Status);
 }

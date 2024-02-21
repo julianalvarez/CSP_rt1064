@@ -38,11 +38,11 @@ static const EEPROM_PAGE eepromPages[] = {{PAGE0_BASE_ADDRESS, PAGE0_END_ADDRESS
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
-static uint16_t      		EE_FindValidPage(void);
-static EEPROM_RESULT 		EE_VerifyBlankPage(uint16_t sectorIdx);
-static EEPROM_RESULT 		EE_PageTransfer(void);
-static EEPROM_RESULT 		EE_VerifyValidPageFull(void);
-static EEPROM_RESULT 		EE_VerifyPageFullWriteVariable(uint16_t destinationPage, uint16_t VirtAddress, uint16_t Data);
+__RAMFUNC(RAM2) static uint16_t      		EE_FindValidPage(void);
+__RAMFUNC(RAM2) static EEPROM_RESULT 		EE_VerifyBlankPage(uint16_t sectorIdx);
+__RAMFUNC(RAM2) static EEPROM_RESULT 		EE_PageTransfer(void);
+__RAMFUNC(RAM2) static EEPROM_RESULT 		EE_VerifyValidPageFull(void);
+__RAMFUNC(RAM2) static EEPROM_RESULT 		EE_VerifyPageFullWriteVariable(uint16_t destinationPage, uint16_t VirtAddress, uint16_t Data);
 
 /**
   *   Restore the pages to a known good state in case of page's status
@@ -302,6 +302,40 @@ EEPROM_RESULT EE_ReadVariable(uint16_t virtAddress, uint16_t* data)
 		}
 	}
 	return RESULT_NOT_FOUND;
+}
+
+/**
+  * @brief  Writes/upadtes variable data in EEPROM.
+  */
+EEPROM_RESULT EE_WriteVariable(uint16_t VirtAddress, uint16_t Data)
+{
+    EEPROM_RESULT status;
+
+    if (VirtAddress > _nbOfVar){
+        return  RESULT_NOT_FOUND;
+    }
+
+    /* Write the variable virtual address and value in the EEPROM valid page */
+    status = EE_VerifyPageFullWriteVariable(EE_FindValidPage(), VirtAddress, Data);
+    if (status == RESULT_PAGE_FULL) { // Cannot write, page full
+        status = EE_PageTransfer();
+        if (status != RESULT_OK) {
+            return RESULT_ERROR;
+        }
+        // If write said page full, it didn't write value
+        status = EE_VerifyPageFullWriteVariable(EE_FindValidPage(), VirtAddress, Data);
+    }
+
+    if (status != RESULT_OK) {
+        return RESULT_ERROR;
+    }
+
+    /* In case the EEPROM active page is full perform page transfer */
+    if (EE_VerifyValidPageFull() == RESULT_PAGE_FULL) { // Variable written and resulted in page full
+        status = EE_PageTransfer();
+    }
+
+    return status;
 }
 
 /**
