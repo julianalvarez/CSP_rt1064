@@ -95,7 +95,6 @@ void SFLASH_init(void)
     FLEXSPI_SoftwareReset(BOARD_FLEXSPI);
 
     _get_vendor_id(BOARD_FLEXSPI, &vendorID);
-    PRINTF("Vendor ID: 0x%x\r\n", vendorID);
 
     _enable_quad_mode(BOARD_FLEXSPI);
 }
@@ -153,12 +152,12 @@ int8_t SFLASH_erase_sector(FLEXSPI_Type *base, uint32_t address)
 
     if (memcmp(s_nor_program_buffer, s_nor_read_buffer, sizeof(s_nor_program_buffer)))
     {
-        PRINTF("Erase data -  read out data value incorrect !\r\n ");
+        //PRINTF("Erase data -  read out data value incorrect !\r\n ");
         return FLASH_ERROR_OPERATION;
     }
     else
     {
-        PRINTF("Erase data - successfully. \r\n");
+        //PRINTF("Erase data - successfully. \r\n");
     }
     return FLASH_COMPLETE;
 }
@@ -216,7 +215,7 @@ int8_t SFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (status != kStatus_Success)
     {
-        PRINTF("Byte program failure !\r\n");
+        //PRINTF("Byte program failure !\r\n");
         return FLASH_ERROR_OPERATION;
     }
 
@@ -227,12 +226,12 @@ int8_t SFLASH_WriteByte(FLEXSPI_Type *base, uint32_t dstAddr, uint8_t Data)
 
     if (memcmp(read_buffer_check, program_buffer, sizeof(program_buffer)) != 0)
     {
-        PRINTF("Program Byte -  read out data value incorrect !\r\n ");
+        //PRINTF("Program Byte -  read out data value incorrect !\r\n ");
         return FLASH_ERROR_OPERATION;
     }
     else
     {
-        PRINTF("Program Byte - successfully. \r\n");
+        //PRINTF("Program Byte - successfully. \r\n");
     }
 
     return FLASH_COMPLETE;
@@ -435,14 +434,14 @@ int8_t Erase_FLASH (uint32_t Address, uint32_t Size)
 
     if (Address >= base_addr && Size == 0x8000) {
     	Address = Address - EXAMPLE_FLEXSPI_AMBA_BASE;
-		PRINTF("Erasing Serial NOR over FlexSPI...\r\n");
+		//PRINTF("Erasing Serial NOR over FlexSPI...\r\n");
 		for(addr = Address; addr <= (Address+0x7000); addr=addr+0x1000)
 		{
 			// Erase sector.
 			status = SFLASH_erase_sector(BOARD_FLEXSPI, addr);
 			if (status != FLASH_COMPLETE)
 			{
-				PRINTF("Erase sector failure !\r\n");
+				//PRINTF("Erase sector failure !\r\n");
 				status = FLASH_ERROR_OPERATION;
 			}
 		}
@@ -451,14 +450,14 @@ int8_t Erase_FLASH (uint32_t Address, uint32_t Size)
     {
         if (Address >= base_addr && Size == 0x10000) {
         	Address = Address - EXAMPLE_FLEXSPI_AMBA_BASE;
-    		PRINTF("Erasing Serial NOR over FlexSPI...\r\n");
+    		//PRINTF("Erasing Serial NOR over FlexSPI...\r\n");
     		for(addr = Address; addr <= (Address+0xF000); addr=addr+0x1000)
     		{
     			// Erase sector.
     			status = SFLASH_erase_sector(BOARD_FLEXSPI, addr);
     			if (status != FLASH_COMPLETE)
     			{
-    				PRINTF("Erase sector failure !\r\n");
+    				//PRINTF("Erase sector failure !\r\n");
     				status = FLASH_ERROR_OPERATION;
     			}
     		}
